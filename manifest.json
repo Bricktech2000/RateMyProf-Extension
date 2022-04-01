@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "RateMyProf Extension",
+  "description": "RateMyProf Extension",
+  "version": "1.0",
+  "permissions:": [],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["script.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
