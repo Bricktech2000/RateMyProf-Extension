@@ -1,0 +1,12 @@
+get prof data
+go to: ratemyprofessors.com
+by school: university of ottawa: https://www.ratemyprofessors.com/campusRatings.jsp?sid=1452#
+click on: "schools" on the left
+open network dev tools
+click on: "load more" on the left
+get the last request: https://solr-aws-elb-production.ratemyprofessors.com//solr/rmp/select/?solrformat=true&rows=20&wt=json&json.wrf=noCB&callback=noCB&q=*%3A*+AND+schoolid_s%3A1452&defType=edismax&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacherfullname_t%5E2000+autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=total_number_of_ratings_i+desc&siteName=rmp&rows=20&start=20&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s&fq=
+edit it to get 10 000 000 profs (current database is 1.3M profs) and remove schoolid_s filter
+curl the resulting url into `data.json`:
+curl -o data.json "https://solr-aws-elb-production.ratemyprofessors.com//solr/rmp/select/?solrformat=true&rows=10000000&wt=json&json.wrf=noCB&callback=noCB&q=*%3A*&defType=edismax&qf=teacherfirstname_t%5E2000+teacherlastname_t%5E2000+teacherfullname_t%5E2000+autosuggest&bf=pow(total_number_of_ratings_i%2C2.1)&sort=total_number_of_ratings_i+desc&siteName=rmp&fl=pk_id+teacherfirstname_t+teacherlastname_t+total_number_of_ratings_i+averageratingscore_rf+schoolid_s&fq="
+
+preprocess using preprocess.py to get `processed.json`
