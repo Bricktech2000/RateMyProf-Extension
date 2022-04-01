@@ -10,5 +10,10 @@
       "js": ["script.js"],
       "run_at": "document_end"
     }
-  ]
+  ],
+  "background": {
+    "persistent": false,
+    "scripts": ["background.js"]
+  },
+  "web_accessible_resources": ["processed.json"]
 }

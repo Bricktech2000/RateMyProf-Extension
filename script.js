@@ -1,17 +1,25 @@
 window.addEventListener('load', async () => {
-  // const res = await fetch('processed.json');
-  // const json = await res.json();
+  console.log('extension loaded.');
 
-  console.log('extension loaded');
-  // for (const [key, value] of Object.entries(json)) {
-  for (const [key, value] of Object.entries({ code: 'asdf' })) {
-    replaceOnDocument(new RegExp(key, 'gi'), 'PROF NAME REPLACED');
-  }
+  console.log('loading data...');
+  const url = chrome.runtime.sendMessage({}, async (url) => {
+    const res = await fetch(url);
+    const json = await res.json();
+
+    console.log('replacing keys...');
+
+    replaceOnDocument(Object.keys(json).slice(0, 50), 'PROF NAME REPLACED');
+
+    // for (const [key, value] of Object.entries(json).slice(0, 1000)) {
+    // }
+
+    console.log('done.');
+  });
 });
 
 // https://stackoverflow.com/questions/18643766/find-and-replace-specific-text-characters-across-a-document-with-js
 const replaceOnDocument = (
-  pattern,
+  patterns,
   string,
   { target = document.body } = {}
 ) => {
@@ -22,11 +30,13 @@ const replaceOnDocument = (
   ].forEach(({ childNodes: [...nodes] }) =>
     nodes
       .filter(({ nodeType }) => nodeType === document.TEXT_NODE)
-      .forEach(
-        (textNode) =>
-          (textNode.textContent = textNode.textContent.replace(pattern, string))
-      )
+      .forEach((textNode) => {
+        patterns.forEach((pattern) => {
+          textNode.textContent = textNode.textContent.replaceAll(
+            pattern,
+            string
+          );
+        });
+      })
   );
 };
-
-replaceOnDocument(/€/g, '$');
