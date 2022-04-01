@@ -2,16 +2,13 @@ window.addEventListener('load', async () => {
   console.log('extension loaded.');
 
   console.log('loading data...');
-  const url = chrome.runtime.sendMessage({}, async (url) => {
+  chrome.runtime.sendMessage({}, async (url) => {
     const res = await fetch(url);
     const json = await res.json();
 
     console.log('replacing keys...');
 
-    replaceOnDocument(Object.keys(json).slice(0, 50), 'PROF NAME REPLACED');
-
-    // for (const [key, value] of Object.entries(json).slice(0, 1000)) {
-    // }
+    replaceOnDocument(Object.keys(json), 'PROF NAME REPLACED');
 
     console.log('done.');
   });
