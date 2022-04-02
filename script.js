@@ -6,14 +6,47 @@ window.addEventListener('load', async () => {
     const res = await fetch(url);
     const json = await res.json();
 
-    console.log('replacing keys...');
+    const run = async ({ target = document.body } = {}) => {
+      // console.log('waiting...');
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    replaceOnDocument(
-      Object.keys(json),
-      Object.values(json).map((value) => value.s / 5)
-    );
+      console.log('replacing keys...');
 
-    console.log('done.');
+      replaceOnDocument(
+        Object.keys(json),
+        Object.entries(json).map(
+          ([key, value]) =>
+            `<span id="RateMyProfID" style="text-decoration: underline solid hsl(${
+              (value.s / 5) * (360 / 3)
+            }, 100%, 50%) 2px;">${key}</span>`
+        ),
+        { target }
+      );
+      console.log('done.');
+    };
+
+    // https://blog.sessionstack.com/how-javascript-works-tracking-changes-in-the-dom-using-mutationobserver-86adc7446401
+    // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+    // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/MutationObserver
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        // https://stackoverflow.com/questions/6518802/check-if-element-is-a-div
+        if (
+          mutation.target.id !== 'RateMyProfID' &&
+          mutation.target.tagName !== '' // text node (maybe?)
+        )
+          run({ target: mutation.target });
+      });
+    });
+
+    mutationObserver.observe(document, {
+      childList: true,
+      subtree: true,
+    });
+
+    document.body.addEventListener('click', run);
+    run();
   });
 });
 
@@ -29,21 +62,28 @@ const replaceOnDocument = (
   // Handle `string` — see the last section
   [
     target,
-    ...target.querySelectorAll('*:not(script):not(noscript):not(style)'),
+    ...target.querySelectorAll('*:not(script):not(style):not(head)'),
   ].forEach(({ childNodes: [...nodes] }) =>
     nodes
       .filter(({ nodeType }) => nodeType === document.TEXT_NODE)
       .forEach((textNode) => {
         zip(patterns, strings).forEach(([pattern, string]) => {
+          // if (textNode.textContent.includes(pattern)) {
+          //   textNode.parentNode.style.backgroundColor = `hsl(${
+          //     string * (360 / 3)
+          //   }, 100%, 50%)`;
+          // }
+
+          // https://stackoverflow.com/questions/15553280/replace-a-textnode-with-html-text-in-javascript
+
           if (textNode.textContent.includes(pattern)) {
-            textNode.parentNode.style.backgroundColor = `hsl(${
-              string * (360 / 3)
-            }, 100%, 50%)`;
+            var replacementNode = document.createElement('span');
+            replacementNode.innerHTML = textNode.textContent.replaceAll(
+              pattern,
+              string
+            );
+            textNode.replaceWith(replacementNode);
           }
-          // textNode.textContent = textNode.textContent.replaceAll(
-          //   pattern,
-          //   string
-          // );
         });
       })
   );
