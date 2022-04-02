@@ -12,9 +12,11 @@ chrome.runtime.sendMessage({}, async (url) => {
       Object.keys(json),
       Object.entries(json).map(
         ([key, value]) =>
-          `<span id="RateMyProfID" style="text-decoration: underline solid hsl(${
+          `<a id="RateMyProfID" style="text-decoration: underline solid hsl(${
             ((value.s - 1) / 4) * (360 / 3)
-          }, 100%, 50%) 2px;">${key}</span>`
+          }, 100%, 50%) 2px; color: inherit !important;" href="https://www.ratemyprofessors.com/ShowRatings.jsp?tid=${
+            value.id
+          }" target="blank">${key}</a>`
       ),
       target
     );

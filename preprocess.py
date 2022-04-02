@@ -10,7 +10,8 @@ with open('data.json', 'r') as f:
     print('creating constant lookup dictionary by name...')
     for prof in data['response']['docs']:
       if 'teacherfirstname_t' in prof and 'teacherlastname_t' in prof:
-        constant_time_name_lookup[prof['teacherfirstname_t'] + ' ' + prof['teacherlastname_t']] = {'s': prof.get('averageratingscore_rf', 0), 'n': prof['total_number_of_ratings_i']}
+        # 'n': prof['total_number_of_ratings_i'],
+        constant_time_name_lookup[prof['teacherfirstname_t'] + ' ' + prof['teacherlastname_t']] = {'s': prof.get('averageratingscore_rf', 0), 'id': prof['pk_id']}
     # print(constant_name_lookup)
     
     print('saving to file...')
