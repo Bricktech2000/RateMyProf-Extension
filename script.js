@@ -13,7 +13,7 @@ chrome.runtime.sendMessage({}, async (url) => {
       Object.entries(json).map(
         ([key, value]) =>
           `<span id="RateMyProfID" style="text-decoration: underline solid hsl(${
-            (value.s / 5) * (360 / 3)
+            ((value.s - 1) / 4) * (360 / 3)
           }, 100%, 50%) 2px;">${key}</span>`
       ),
       target
