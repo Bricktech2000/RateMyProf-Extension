@@ -85,7 +85,7 @@ const replaceOnDocument = (patterns, strings, targets) => {
           zip(patterns, strings).forEach(async ([pattern, string]) => {
             // https://stackoverflow.com/questions/15553280/replace-a-textnode-with-html-text-in-javascript
             if (textNode.textContent.includes(pattern)) {
-              var replacementNode = document.createElement('span');
+              let replacementNode = document.createElement('span');
               replacementNode.innerHTML = textNode.textContent.replaceAll(
                 pattern,
                 string
