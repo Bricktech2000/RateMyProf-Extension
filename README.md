@@ -1,6 +1,6 @@
 # RateMyProf Extension
 
-A Chromium extension to automatically underline professor names with their Rate My Professor ratings
+_A Chromium extension to automatically underline professor names with their Rate My Professor ratings_
 
 ## Requirements
 
